@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Params } from 'nestjs-pino';
 import { ConfigurationService } from '../config/configuration.service';
 
@@ -9,11 +8,13 @@ export const loggerConfig: Params = {
     level: config.isProduction ? 'info' : 'debug',
     serializers: {
       req(req) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { headers, remoteAddress, remotePort, ...requiredReqObject } =
           req;
         return requiredReqObject;
       },
       res(res) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { headers, ...requiredResObject } = res;
         return requiredResObject;
       },
