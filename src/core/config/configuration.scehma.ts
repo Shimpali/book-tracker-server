@@ -15,5 +15,5 @@ export const configurationSchema = Joi.object({
   AUTH_REFRESH_JWT: Joi.required(),
   AUTH_REFRESH_JWT_EXPIRY: Joi.required(),
 
-  MONGO_CONNECTION_URL: Joi.required(),
+  DATABASE_URL: Joi.required(),
 });

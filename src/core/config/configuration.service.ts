@@ -93,7 +93,7 @@ export class ConfigurationService {
 
   get mongooseConfig(): MongooseModuleOptions {
     return {
-      uri: this.getValue('MONGO_CONNECTION_URL'),
+      uri: this.getValue('DATABASE_URL'),
       retryAttempts: 5,
     };
   }
