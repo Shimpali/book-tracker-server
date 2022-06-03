@@ -5,7 +5,6 @@ import { BooksModule } from './books/books.module';
   imports: [
     BooksModule,
     // ReviewsModule,
-    // TagsModule,
     // UsersModule
   ],
   controllers: [],

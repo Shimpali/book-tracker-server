@@ -1,7 +1,6 @@
 import { Schema } from 'mongoose';
 import { ApplicationModules } from 'src/common/enums';
 import { ReviewCollectionName } from '../../reviews/data/review.schema';
-import { TagCollectionName } from '../../tags/data/tag.schema';
 
 export const BookCollectionName = ApplicationModules.BOOKS;
 
@@ -12,7 +11,8 @@ export const BookSchema = new Schema(
     cover: String,
     pageCount: Number,
     link: String,
-    genre: String,
+    categories: String,
+    volumeId: String,
   },
   {
     collection: BookCollectionName,
@@ -24,13 +24,6 @@ export const BookSchema = new Schema(
 
 BookSchema.virtual('reviews', {
   ref: ReviewCollectionName,
-  foreignField: 'book',
-  localField: '_id',
-  justOne: false,
-});
-
-BookSchema.virtual('tags', {
-  ref: TagCollectionName,
   foreignField: 'book',
   localField: '_id',
   justOne: false,

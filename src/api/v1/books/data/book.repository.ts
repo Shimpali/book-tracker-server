@@ -9,7 +9,7 @@ import { BookCollectionName } from './book.schema';
 @Injectable()
 export class BookRepository {
   constructor(
-    @InjectModel(BookCollectionName) private bookModel: Model<BookDocument>
+    @InjectModel(BookCollectionName) private bookModel: Model<BookDocument>,
   ) {}
 
   async addBook(addBookDto: AddBookDto): Promise<BookDocument> {
@@ -18,16 +18,16 @@ export class BookRepository {
   }
 
   async getAllBooks(): Promise<BookDocument[]> {
-    return this.bookModel.find().populate('reviews tags').exec();
+    return this.bookModel.find().populate('reviews').exec();
   }
 
   async getBookById(id: string): Promise<BookDocument> {
-    return this.bookModel.findById(id).populate('reviews tags').exec();
+    return this.bookModel.findById(id).populate('reviews').exec();
   }
 
   async updateBook(
     id: string,
-    updatedBook: UpdateBookDto
+    updatedBook: UpdateBookDto,
   ): Promise<BookDocument> {
     return this.bookModel.findByIdAndUpdate(id, updatedBook, {
       new: true,

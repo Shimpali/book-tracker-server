@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsString, IsUrl } from 'class-validator';
-import { Review, Tag } from 'src/common/models';
+import {
+  IsArray,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUrl,
+} from 'class-validator';
+import { Review } from 'src/common/models';
 
 export class UpdateBookDto {
   @IsString()
@@ -8,8 +14,13 @@ export class UpdateBookDto {
   title: string;
 
   @IsString()
+  @IsOptional()
   @ApiProperty()
-  author: string;
+  subtitle?: string;
+
+  @IsString()
+  @ApiProperty()
+  authors: string[];
 
   @IsString()
   @ApiProperty()
@@ -27,15 +38,23 @@ export class UpdateBookDto {
   @ApiProperty()
   link: string;
 
+  @IsNumber()
+  @ApiProperty()
+  publishedDate: string;
+
   @IsString()
   @ApiProperty()
-  genre: string;
+  categories: string[];
+
+  @IsNumber()
+  @ApiProperty()
+  averageRating: number;
 
   @IsArray()
   @ApiProperty()
   reviews: Review[];
 
-  @IsArray()
+  @IsNumber()
   @ApiProperty()
-  tags: Tag[];
+  volumeId: number;
 }
