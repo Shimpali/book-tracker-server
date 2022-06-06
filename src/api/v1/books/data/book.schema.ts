@@ -40,5 +40,5 @@ BookSchema.virtual('progress', {
   ref: ProgressCollectionName,
   foreignField: 'book',
   localField: '_id',
-  justOne: false,
+  justOne: true,
 });
