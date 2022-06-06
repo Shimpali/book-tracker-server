@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { QueryParamsDTO } from 'src/common/dto';
 import { AddReviewDto } from '../dto/add-review.dto';
 import { UpdateReviewDto } from '../dto/update-review.dto';
 import { ReviewDocument } from './review.document';
@@ -10,7 +11,7 @@ import { ReviewCollectionName } from './review.schema';
 export class ReviewRepository {
   constructor(
     @InjectModel(ReviewCollectionName)
-    private reviewModel: Model<ReviewDocument>
+    private reviewModel: Model<ReviewDocument>,
   ) {}
 
   async addReview(addReviewDto: AddReviewDto): Promise<ReviewDocument> {
@@ -18,8 +19,27 @@ export class ReviewRepository {
     return newReview.save();
   }
 
-  async getAllReviews(): Promise<ReviewDocument[]> {
-    return this.reviewModel.find().exec();
+  async getAllReviews(queryParams?: QueryParamsDTO): Promise<ReviewDocument[]> {
+    const { book, user, search, offset, limit } = queryParams;
+    const userQuery = user ? { user } : {};
+    const bookQuery = book ? { book } : {};
+    const searchQuery = search
+      ? { title: { $regex: new RegExp(`${search || ''}`, 'i') } }
+      : {};
+    const query = { ...userQuery, ...bookQuery, ...searchQuery };
+
+    return this.reviewModel
+      .find(query)
+      .skip(offset || 0)
+      .limit(limit || 10)
+      .exec();
+  }
+
+  async getReviewByUserAndBookIds(
+    queryParams?: QueryParamsDTO,
+  ): Promise<ReviewDocument> {
+    const { user, book } = queryParams;
+    return this.reviewModel.findById({ user, book }).exec();
   }
 
   async getReviewById(id: string): Promise<ReviewDocument> {
@@ -28,7 +48,7 @@ export class ReviewRepository {
 
   async updateReview(
     id: string,
-    updatedReview: UpdateReviewDto
+    updatedReview: UpdateReviewDto,
   ): Promise<ReviewDocument> {
     return this.reviewModel.findByIdAndUpdate(id, updatedReview, {
       new: true,

@@ -17,6 +17,7 @@ import { Types } from 'mongoose';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { QueryParamsDTO } from 'src/common/dto';
 import { ApplicationModules } from 'src/common/enums';
+import { BookCounts } from 'src/common/models';
 import { BooksService } from './books.service';
 import { BookDocument } from './data/book.document';
 import { AddBookDto } from './dto/add-book.dto';
@@ -43,6 +44,12 @@ export class BooksController {
     @Query() queryParams?: QueryParamsDTO,
   ): Promise<BookDocument[]> {
     return await this.booksService.findAll(queryParams);
+  }
+
+  @Get('counts-by-status')
+  @ApiBearerAuth()
+  async getCountsByStatus(): Promise<BookCounts> {
+    return await this.booksService.getBookCountsByStatus();
   }
 
   @Get(':id')

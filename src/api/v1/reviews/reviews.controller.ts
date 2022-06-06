@@ -3,12 +3,17 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
+  Patch,
   Post,
-  Put,
+  Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { QueryParamsDTO } from 'src/common/dto';
 import { ApplicationModules } from 'src/common/enums';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
 import { ReviewDocument } from './data/review.document';
@@ -20,34 +25,59 @@ import { ReviewsService } from './reviews.service';
 @UseGuards(JwtAuthGuard)
 @Controller('reviews')
 export class ReviewsController {
-  constructor(private readonly booksService: ReviewsService) {}
+  constructor(private readonly reviewsService: ReviewsService) {}
 
   @Post()
-  async add(@Body() addReviewDto: AddReviewDto): Promise<ReviewDocument> {
-    return this.booksService.add(addReviewDto);
+  async add(
+    @Body() addReviewDto: AddReviewDto,
+    @Req() request,
+  ): Promise<ReviewDocument> {
+    const user = request.user?.id;
+    return this.reviewsService.add({ ...addReviewDto, user });
   }
 
   @Get()
   @ApiBearerAuth()
-  async findAll(): Promise<ReviewDocument[]> {
-    return this.booksService.findAll();
+  async findAll(
+    @Query() queryParams: QueryParamsDTO,
+    @Req() request,
+  ): Promise<ReviewDocument[]> {
+    const user = request.user?.id;
+    return this.reviewsService.findAll({ ...queryParams, user });
+  }
+
+  @Get(':bookId')
+  async findByUserAndBook(
+    @Query() queryParams: QueryParamsDTO,
+    @Req() request,
+  ): Promise<ReviewDocument> {
+    const user = request.user?.id;
+    const review: ReviewDocument = await this.reviewsService.findOne({
+      ...queryParams,
+      user,
+    });
+
+    if (!review)
+      throw new HttpException('Review not found!', HttpStatus.BAD_REQUEST);
+
+    return review;
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<ReviewDocument> {
-    return this.booksService.findOne(id);
+    return this.reviewsService.findById(id);
   }
 
-  @Put(':id')
+  @Patch(':id')
   async update(
     @Param('id') id: string,
     @Body() updateReviewDto: UpdateReviewDto,
   ): Promise<ReviewDocument> {
-    return this.booksService.update(id, updateReviewDto);
+    return this.reviewsService.update(id, updateReviewDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return this.booksService.remove(id);
+    return this.reviewsService.remove(id);
   }
 }

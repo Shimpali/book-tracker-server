@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumber } from 'class-validator';
-import { PositionType } from 'src/common/models';
+import { PositionType } from 'src/common/enums';
 
 export class UpdateProgressDto {
   @IsNumber()

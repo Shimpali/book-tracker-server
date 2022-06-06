@@ -1,5 +1,6 @@
 import { Injectable, Query } from '@nestjs/common';
 import { QueryParamsDTO } from 'src/common/dto';
+import { BookCounts } from 'src/common/models';
 
 import { UserDocument } from '../users/data/user.document';
 import { BookDocument } from './data/book.document';
@@ -35,5 +36,9 @@ export class BooksService {
 
   async remove(id: string) {
     return this.bookRepository.deleteBook(id);
+  }
+
+  async getBookCountsByStatus(): Promise<BookCounts> {
+    return this.bookRepository.getBookCounts();
   }
 }

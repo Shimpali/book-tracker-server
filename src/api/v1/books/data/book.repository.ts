@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { QueryParamsDTO } from 'src/common/dto';
 import { Status } from 'src/common/enums';
+import { BookCounts } from 'src/common/models';
 import { UserDocument } from '../../users/data/user.document';
 import { AddBookDto } from '../dto/add-book.dto';
 import { UpdateBookStatusDto } from '../dto/update-book-status.dto';
@@ -21,7 +22,7 @@ export class BookRepository {
   }
 
   async getAllBooks(queryParams?: QueryParamsDTO): Promise<BookDocument[]> {
-    const { status, search } = queryParams;
+    const { status, search, offset, limit } = queryParams;
 
     const filterQuery = status ? { status } : {};
     const searchQuery = search
@@ -32,27 +33,27 @@ export class BookRepository {
     return this.bookModel
       .find(query)
       .populate('reviews')
-      .skip(queryParams?.offset || 0)
-      .limit(queryParams?.limit || 10)
+      .skip(offset || 0)
+      .limit(limit || 10)
       .exec();
   }
 
-  async getBookCounts(): Promise<any> {
+  async getBookCounts(): Promise<BookCounts> {
     const total = await this.bookModel.count();
 
-    const currentlyReadingCount = await this.bookModel.count({
+    const currentlyReading = await this.bookModel.count({
       status: Status.CurrentlyReading,
     });
 
-    const wantToReadCount = await this.bookModel.count({
+    const wantToRead = await this.bookModel.count({
       status: Status.WantToRead,
     });
 
-    const readCount = await this.bookModel.count({
+    const read = await this.bookModel.count({
       status: Status.Read,
     });
 
-    return { total, currentlyReadingCount, wantToReadCount, readCount };
+    return { total, currentlyReading, wantToRead, read } as BookCounts;
   }
 
   async getBookById(id: string): Promise<BookDocument> {

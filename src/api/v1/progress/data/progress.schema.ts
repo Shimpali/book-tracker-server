@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import { ApplicationModules, Models } from 'src/common/enums';
-import { PositionType } from 'src/common/models';
+import { ApplicationModules, Models, PositionType } from 'src/common/enums';
+
 import { BookCollectionName } from '../../books/data/book.schema';
 
 export const ProgressCollectionName = ApplicationModules.REVIEWS;

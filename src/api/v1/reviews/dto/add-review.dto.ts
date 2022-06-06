@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsMongoId, IsString, ValidateNested } from 'class-validator';
-import { User } from 'src/common/models';
+import { IsMongoId, IsString } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class AddReviewDto {
   @IsMongoId()
@@ -15,7 +15,7 @@ export class AddReviewDto {
   @ApiProperty()
   content: string;
 
-  @ValidateNested()
+  @IsMongoId()
   @ApiProperty()
-  user: User;
+  user: Types.ObjectId;
 }

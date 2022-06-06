@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
+import { QueryParamsDTO } from 'src/common/dto';
 import { ReviewDocument } from './data/review.document';
 import { ReviewRepository } from './data/review.repository';
 import { AddReviewDto } from './dto/add-review.dto';
@@ -12,17 +13,25 @@ export class ReviewsService {
     return this.reviewRepository.addReview(addReviewDto);
   }
 
-  async findAll(): Promise<ReviewDocument[]> {
-    return this.reviewRepository.getAllReviews();
+  async findAll(
+    @Query() queryParams?: QueryParamsDTO,
+  ): Promise<ReviewDocument[]> {
+    return this.reviewRepository.getAllReviews(queryParams);
   }
 
-  async findOne(id: string): Promise<ReviewDocument> {
+  async findOne(
+    @Query() queryParams?: QueryParamsDTO,
+  ): Promise<ReviewDocument> {
+    return this.reviewRepository.getReviewByUserAndBookIds(queryParams);
+  }
+
+  async findById(id: string): Promise<ReviewDocument> {
     return this.reviewRepository.getReviewById(id);
   }
 
   async update(
     id: string,
-    updatedReview: UpdateReviewDto
+    updatedReview: UpdateReviewDto,
   ): Promise<ReviewDocument> {
     return this.reviewRepository.updateReview(id, updatedReview);
   }

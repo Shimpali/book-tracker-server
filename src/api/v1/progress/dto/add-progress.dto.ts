@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsMongoId, IsNumber, ValidateNested } from 'class-validator';
-import { PositionType, User } from 'src/common/models';
+import { PositionType } from 'src/common/enums';
+import { User } from 'src/common/models';
 
 export class AddProgressDto {
   @IsMongoId()
