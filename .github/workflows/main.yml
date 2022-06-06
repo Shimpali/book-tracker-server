@@ -40,4 +40,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: 'book-tracker-nestjs'
           heroku_email: ${{secrets.HEROKU_EMAIL}}
-      - run: git push heroku HEAD:main -f
+          justlogin: true
