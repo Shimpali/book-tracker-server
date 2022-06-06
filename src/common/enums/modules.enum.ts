@@ -4,5 +4,4 @@ export enum ApplicationModules {
   REVIEWS = 'reviews',
   PROGRESS = 'progress',
   AUTH = 'auth',
-  ACL = 'acl',
 }
