@@ -13,6 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Types } from 'mongoose';
 import { QueryParamsDTO } from 'src/common/dto';
 import { ApplicationModules } from 'src/common/enums';
 import { JwtAuthGuard } from '../../../auth/guards/jwt-auth.guard';
@@ -46,16 +47,16 @@ export class ReviewsController {
     return this.reviewsService.findAll({ ...queryParams, user });
   }
 
-  @Get(':bookId')
+  @Get('book/:bookId')
   async findByUserAndBook(
-    @Query() queryParams: QueryParamsDTO,
+    @Param('bookId') bookId: Types.ObjectId,
     @Req() request,
   ): Promise<ReviewDocument> {
     const user = request.user?.id;
-    const review: ReviewDocument = await this.reviewsService.findOne({
-      ...queryParams,
+    const review: ReviewDocument = await this.reviewsService.findOne(
+      bookId,
       user,
-    });
+    );
 
     if (!review)
       throw new HttpException('Review not found!', HttpStatus.BAD_REQUEST);

@@ -5,7 +5,7 @@ import { Types } from 'mongoose';
 export class AddReviewDto {
   @IsMongoId()
   @ApiProperty()
-  book: string;
+  book: Types.ObjectId;
 
   @IsString()
   @ApiProperty()

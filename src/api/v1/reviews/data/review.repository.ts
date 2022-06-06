@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { QueryParamsDTO } from 'src/common/dto';
 import { AddReviewDto } from '../dto/add-review.dto';
 import { UpdateReviewDto } from '../dto/update-review.dto';
@@ -15,7 +15,7 @@ export class ReviewRepository {
   ) {}
 
   async addReview(addReviewDto: AddReviewDto): Promise<ReviewDocument> {
-    const newReview = new this.reviewModel(addReviewDto);
+    const newReview = await new this.reviewModel(addReviewDto);
     return newReview.save();
   }
 
@@ -36,10 +36,10 @@ export class ReviewRepository {
   }
 
   async getReviewByUserAndBookIds(
-    queryParams?: QueryParamsDTO,
+    book: Types.ObjectId,
+    user: Types.ObjectId,
   ): Promise<ReviewDocument> {
-    const { user, book } = queryParams;
-    return this.reviewModel.findById({ user, book }).exec();
+    return this.reviewModel.findOne({ user, book }).exec();
   }
 
   async getReviewById(id: string): Promise<ReviewDocument> {

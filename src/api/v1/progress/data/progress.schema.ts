@@ -1,9 +1,7 @@
 import { Schema } from 'mongoose';
 import { ApplicationModules, Models, PositionType } from 'src/common/enums';
 
-import { BookCollectionName } from '../../books/data/book.schema';
-
-export const ProgressCollectionName = ApplicationModules.REVIEWS;
+export const ProgressCollectionName = ApplicationModules.PROGRESS;
 
 export const ProgressSchema = new Schema(
   {
@@ -15,16 +13,10 @@ export const ProgressSchema = new Schema(
       default: PositionType.Pages,
     },
     user: { type: Schema.Types.ObjectId, ref: Models.USER },
+    book: { type: Schema.Types.ObjectId, ref: Models.BOOK },
   },
   {
     collection: ProgressCollectionName,
     timestamps: true,
   },
 );
-
-ProgressSchema.virtual('book', {
-  ref: BookCollectionName,
-  foreignField: 'book',
-  localField: 'book',
-  justOne: false,
-});

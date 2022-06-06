@@ -1,4 +1,5 @@
 import { Injectable, Query } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { QueryParamsDTO } from 'src/common/dto';
 import { ReviewDocument } from './data/review.document';
 import { ReviewRepository } from './data/review.repository';
@@ -20,9 +21,10 @@ export class ReviewsService {
   }
 
   async findOne(
-    @Query() queryParams?: QueryParamsDTO,
+    book: Types.ObjectId,
+    user: Types.ObjectId,
   ): Promise<ReviewDocument> {
-    return this.reviewRepository.getReviewByUserAndBookIds(queryParams);
+    return this.reviewRepository.getReviewByUserAndBookIds(book, user);
   }
 
   async findById(id: string): Promise<ReviewDocument> {

@@ -17,7 +17,7 @@ export class BookRepository {
   ) {}
 
   async addBook(addBookDto: AddBookDto): Promise<BookDocument> {
-    const newBook = new this.bookModel(addBookDto);
+    const newBook = await new this.bookModel(addBookDto);
     return newBook.save();
   }
 
@@ -32,7 +32,7 @@ export class BookRepository {
 
     return this.bookModel
       .find(query)
-      .populate('reviews')
+      .populate('reviews progress')
       .skip(offset || 0)
       .limit(limit || 10)
       .exec();
@@ -57,7 +57,7 @@ export class BookRepository {
   }
 
   async getBookById(id: string): Promise<BookDocument> {
-    return this.bookModel.findById(id).populate('reviews').exec();
+    return this.bookModel.findById(id).populate('reviews progress').exec();
   }
 
   async updateBookStatus(

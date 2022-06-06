@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { ProgressDocument } from './data/progress.document';
 import { ProgressRepository } from './data/progress.repository';
 import { AddProgressDto } from './dto/add-progress.dto';
@@ -12,11 +13,18 @@ export class ProgressService {
     return this.progressRepository.addProgress(addProgressDto);
   }
 
-  async findAll(): Promise<ProgressDocument[]> {
-    return this.progressRepository.getAllProgresss();
+  async findAll(user: Types.ObjectId): Promise<ProgressDocument[]> {
+    return this.progressRepository.getAllProgress(user);
   }
 
-  async findOne(id: string): Promise<ProgressDocument> {
+  async findOne(
+    bookId: Types.ObjectId,
+    user: Types.ObjectId,
+  ): Promise<ProgressDocument> {
+    return this.progressRepository.getProgressByUserAndBookIds(bookId, user);
+  }
+
+  async findById(id: string): Promise<ProgressDocument> {
     return this.progressRepository.getProgressById(id);
   }
 

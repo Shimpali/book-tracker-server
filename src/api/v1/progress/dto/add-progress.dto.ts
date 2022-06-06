@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsMongoId, IsNumber, ValidateNested } from 'class-validator';
+import { IsEnum, IsMongoId, IsNumber } from 'class-validator';
+import { Types } from 'mongoose';
 import { PositionType } from 'src/common/enums';
-import { User } from 'src/common/models';
 
 export class AddProgressDto {
   @IsMongoId()
   @ApiProperty()
-  book: string;
+  book: Types.ObjectId;
 
   @IsNumber()
   @ApiProperty()
@@ -20,7 +20,7 @@ export class AddProgressDto {
   @ApiProperty()
   type: PositionType;
 
-  @ValidateNested()
+  @IsMongoId()
   @ApiProperty()
-  user: User;
+  user: Types.ObjectId;
 }
