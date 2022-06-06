@@ -1,15 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsString, IsUrl } from 'class-validator';
-import { Review } from 'src/common/models';
+import { IsEnum, IsMongoId, IsNumber, IsString, IsUrl } from 'class-validator';
+import { Types } from 'mongoose';
+import { Status } from 'src/common/enums';
 
 export class AddBookDto {
   @IsString()
   @ApiProperty()
   title: string;
 
-  @IsString()
+  @IsString({ each: true })
   @ApiProperty()
-  author: string;
+  authors: string[];
 
   @IsString()
   @ApiProperty()
@@ -27,15 +28,21 @@ export class AddBookDto {
   @ApiProperty()
   link: string;
 
-  @IsString()
+  @IsString({ each: true })
   @ApiProperty()
   categories: string[];
-
-  @IsArray()
-  @ApiProperty()
-  reviews: Review[];
 
   @IsString()
   @ApiProperty()
   volumeId: string[];
+
+  @IsMongoId()
+  @ApiProperty()
+  user: Types.ObjectId;
+
+  @IsEnum(Status)
+  @ApiProperty({
+    enum: Status,
+  })
+  status: Status;
 }

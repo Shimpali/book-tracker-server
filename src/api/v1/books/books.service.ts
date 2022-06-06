@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Query } from '@nestjs/common';
+import { QueryParamsDTO } from 'src/common/dto';
+
+import { UserDocument } from '../users/data/user.document';
 import { BookDocument } from './data/book.document';
 import { BookRepository } from './data/book.repository';
 import { AddBookDto } from './dto/add-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
+import { UpdateBookStatusDto } from './dto/update-book-status.dto';
 
 @Injectable()
 export class BooksService {
@@ -12,16 +15,22 @@ export class BooksService {
     return this.bookRepository.addBook(addBookDto);
   }
 
-  async findAll(): Promise<BookDocument[]> {
-    return this.bookRepository.getAllBooks();
+  async findAll(
+    @Query() queryParams?: QueryParamsDTO,
+  ): Promise<BookDocument[]> {
+    return this.bookRepository.getAllBooks(queryParams);
   }
 
   async findOne(id: string): Promise<BookDocument> {
     return this.bookRepository.getBookById(id);
   }
 
-  async update(id: string, updatedBook: UpdateBookDto): Promise<BookDocument> {
-    return this.bookRepository.updateBook(id, updatedBook);
+  async updateBookStatus(
+    id: string,
+    updatedBookStatus: UpdateBookStatusDto,
+    user: Partial<UserDocument>,
+  ): Promise<BookDocument> {
+    return this.bookRepository.updateBookStatus(id, user, updatedBookStatus);
   }
 
   async remove(id: string) {

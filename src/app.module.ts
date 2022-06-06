@@ -10,9 +10,9 @@ import { DatabaseModule } from './database/database.module';
 @Module({
   imports: [
     DatabaseModule,
-    LoggerModule.forRoot(loggerConfig),
-    APIModule,
     AuthModule,
+    APIModule,
+    LoggerModule.forRoot(loggerConfig),
   ],
   controllers: [AppController],
   providers: [AppService],

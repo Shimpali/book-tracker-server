@@ -1,4 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { comparePasswords } from 'src/common/utils';
 import { LoginDto } from '../../../auth/dto/login.dto';
 import { UserDocument } from './data/user.document';
@@ -9,8 +10,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 export class UsersService {
   constructor(private userRepository: UserRepository) {}
 
-  async findOne(id: string): Promise<UserDocument> {
+  async findOne(id: Types.ObjectId): Promise<UserDocument> {
     const user = await this.userRepository.getUserById(id);
+
+    if (!user)
+      throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
+
     return user;
   }
 
@@ -18,7 +23,7 @@ export class UsersService {
     const user: UserDocument = await this.userRepository.getUserByUsername(
       username,
     );
-    console.log(user);
+
     if (!user)
       throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
 
@@ -29,14 +34,6 @@ export class UsersService {
       throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
 
     return user;
-  }
-
-  async findByPayload({
-    username,
-  }: {
-    username: string;
-  }): Promise<UserDocument> {
-    return await this.userRepository.getUserByUsername(username);
   }
 
   async create(userDto: CreateUserDto): Promise<UserDocument> {

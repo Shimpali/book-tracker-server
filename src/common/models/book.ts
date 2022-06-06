@@ -1,3 +1,4 @@
+import { Progress } from './progress';
 import { Review } from './review';
 
 export interface Book {
@@ -13,4 +14,8 @@ export interface Book {
   categories: string[];
   averageRating: number;
   volumeId: string;
+  wantToRead: boolean;
+  currentlyReading: boolean;
+  read: boolean;
+  progress: Progress;
 }
