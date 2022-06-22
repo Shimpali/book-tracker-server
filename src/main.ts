@@ -20,7 +20,7 @@ async function bootstrap() {
 
   app.enableCors({
     allowedHeaders: '*',
-    origin: '*',
+    origin: ['http://localhost:4200', 'https://book-tracker-web.vercel.app/'],
   });
 
   const port = process.env.PORT || 3000;
