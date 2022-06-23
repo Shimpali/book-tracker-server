@@ -16,20 +16,39 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async register(userDto: CreateUserDto): Promise<UserDocument> {
-    return await this.usersService.create(userDto);
+  async register(userDto: CreateUserDto): Promise<LoginStatus> {
+    // create user in db
+    const user = await this.usersService.create(userDto);
+
+    // generate and sign token
+    const token = this.createToken(user.id, user.username);
+
+    const { id, username, email } = user;
+
+    return {
+      id,
+      username,
+      email,
+      ...token,
+    };
   }
 
   async login(loginUserDto: LoginDto): Promise<LoginStatus> {
     // find user in db
     const user = await this.usersService.findByLogin(loginUserDto);
 
+    if (!user)
+      throw new HttpException('User does not exist!', HttpStatus.UNAUTHORIZED);
+
     // generate and sign token
     const token = this.createToken(user.id, user.username);
 
+    const { id, username, email } = user;
+
     return {
-      id: user.id,
-      username: user.username,
+      id,
+      username,
+      email,
       ...token,
     };
   }
